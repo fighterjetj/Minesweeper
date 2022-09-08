@@ -179,6 +179,15 @@ class Minefield:
             self.flagged_squares[cords[0]][cords[1]] = 1
             self.flagged_squares_coordinates.add(cords)
 
+    # Checks if the minefield has been solved!
+    # This is done by comparing the number of hidden squares to the number of mines
+    # If the number of hidden squares is equal to the number of mines, then all non mine squares must be revealed
+    # This is imperfect but less computationally expensive than manually checking each hidden square is a mine
+    # If the player has somehow revealed a mine without losing, then it could spit out a false positive
+    # As long as the player plays through the minesweeper class, there should be no way of this happening
+    def is_solved(self):
+        return len(self.hidden_squares) == len(self.mine_cords)
+
     def get_flagged_squares(self):
         return self.flagged_squares_coordinates
 

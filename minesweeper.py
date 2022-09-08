@@ -139,6 +139,7 @@ class Minesweeper:
     # Mines are just the other colored squares - should never be seen
     def draw_mines(self):
         for mine_cord in self.minefield.get_mine_cords():
+            mine_cord = self.row_col_to_cords(mine_cord)
             pygame.draw.rect(
                 self.screen,
                 self.mine_color,
@@ -194,12 +195,15 @@ class Minesweeper:
                 self.minefield.flag_square(row_col)
                 time.sleep(self.sleep_time)
 
+    def reset_game(self):
+        self.minefield.generate_mines()
+        self.first_click = self.first_click_safe
+
     # Function that handles the passed key being pressed
     def key_handler(self, key):
         # Resets it all if r is pressed
         if key == pygame.K_r:
-            self.minefield.generate_mines()
-            self.first_click = self.first_click_safe
+            self.reset_game()
 
     def print_mine_info(self):
         self.minefield.print_mines()
@@ -225,6 +229,10 @@ class Minesweeper:
         self.draw_cover()
         self.draw_grid()
         self.draw_flags()
+
+        # Checks if the game is won, and if it does, resets the game
+        if self.minefield.is_solved():
+            self.reset_game()
 
         # Updates the display
         pygame.display.update()
